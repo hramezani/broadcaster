@@ -1,4 +1,4 @@
-import aioredis
+import redis.asyncio as redis
 import asyncio
 import typing
 
@@ -13,8 +13,8 @@ class RedisBackend(BroadcastBackend):
 
     async def connect(self) -> None:
         loop = asyncio.get_event_loop()
-        self._pub_conn = await aioredis.create_redis(self.conn_url, loop=loop)
-        self._sub_conn = await aioredis.create_redis(self.conn_url, loop=loop)
+        self._pub_conn = await redis.Redis.from_url(self.conn_url, loop=loop)
+        self._sub_conn = await redis.Redis.from_url(self.conn_url, loop=loop)
 
     async def disconnect(self) -> None:
         self._pub_conn.close()
